@@ -1,0 +1,10 @@
+parameters:
+    ignoreErrors:
+        -
+            identifier: 'property.readOnlyAssignNotInConstructor'
+            count: 11
+            path: '../src/LockDiffEntry.php'
+        -
+            identifier: 'property.uninitializedReadonly'
+            count: 1
+            path: '../src/LockDiffEntry.php'
