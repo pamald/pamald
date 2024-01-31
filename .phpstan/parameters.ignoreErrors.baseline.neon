@@ -1,0 +1,96 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\:\\:setAssetNamePrefix\\(\\)\\.$#"
+			count: 1
+			path: ../RoboFile.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\:\\:setInputFile\\(\\)\\.$#"
+			count: 1
+			path: ../RoboFile.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Robo\\\\Collection\\\\TaskForEach\\:\\:iterationMessage\\(\\)\\.$#"
+			count: 1
+			path: ../RoboFile.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Robo\\\\Task\\\\Filesystem\\\\FilesystemStack\\:\\:mkdir\\(\\)\\.$#"
+			count: 4
+			path: ../RoboFile.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Sweetchuck\\\\Robo\\\\Git\\\\Task\\\\GitListStagedFilesTask\\:\\:setPaths\\(\\)\\.$#"
+			count: 2
+			path: ../RoboFile.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Sweetchuck\\\\Robo\\\\Git\\\\Task\\\\GitReadStagedFilesTask\\:\\:setCommandOnly\\(\\)\\.$#"
+			count: 2
+			path: ../RoboFile.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Sweetchuck\\\\Robo\\\\Phpstan\\\\Task\\\\AnalyzeTask\\:\\:setNoProgress\\(\\)\\.$#"
+			count: 1
+			path: ../RoboFile.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\TaskForEach\\:\\:deferTaskConfiguration\\(\\)\\.$#"
+			count: 1
+			path: ../RoboFile.php
+
+		-
+			message: "#^Call to an undefined method Sweetchuck\\\\Robo\\\\Git\\\\Task\\\\GitReadStagedFilesTask\\:\\:deferTaskConfiguration\\(\\)\\.$#"
+			count: 2
+			path: ../RoboFile.php
+
+		-
+			message: "#^Method RoboFile\\:\\:getTaskCodeceptRunSuite\\(\\) has parameter \\$php with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../RoboFile.php
+
+		-
+			message: "#^PHPDoc tag @param for parameter \\$php contains unresolvable type\\.$#"
+			count: 1
+			path: ../RoboFile.php
+
+		-
+			message: "#^PHPDoc tag @var for variable \\$phpExecutables contains unresolvable type\\.$#"
+			count: 1
+			path: ../RoboFile.php
+
+		-
+			message: "#^Readonly property Pamald\\\\Pamald\\\\LockDiffEntry\\:\\:\\$isVersionChanged is assigned outside of the constructor\\.$#"
+			count: 4
+			path: ../src/LockDiffEntry.php
+
+		-
+			message: "#^Readonly property Pamald\\\\Pamald\\\\LockDiffEntry\\:\\:\\$isVersionMajorChanged is assigned outside of the constructor\\.$#"
+			count: 1
+			path: ../src/LockDiffEntry.php
+
+		-
+			message: "#^Readonly property Pamald\\\\Pamald\\\\LockDiffEntry\\:\\:\\$isVersionMetadataChanged is assigned outside of the constructor\\.$#"
+			count: 1
+			path: ../src/LockDiffEntry.php
+
+		-
+			message: "#^Readonly property Pamald\\\\Pamald\\\\LockDiffEntry\\:\\:\\$isVersionMinorChanged is assigned outside of the constructor\\.$#"
+			count: 1
+			path: ../src/LockDiffEntry.php
+
+		-
+			message: "#^Readonly property Pamald\\\\Pamald\\\\LockDiffEntry\\:\\:\\$isVersionPatchChanged is assigned outside of the constructor\\.$#"
+			count: 1
+			path: ../src/LockDiffEntry.php
+
+		-
+			message: "#^Readonly property Pamald\\\\Pamald\\\\LockDiffEntry\\:\\:\\$isVersionPreReleaseChanged is assigned outside of the constructor\\.$#"
+			count: 1
+			path: ../src/LockDiffEntry.php
+
+		-
+			message: "#^Readonly property Pamald\\\\Pamald\\\\LockDiffEntry\\:\\:\\$versionPartChanged is assigned outside of the constructor\\.$#"
+			count: 9
+			path: ../src/LockDiffEntry.php

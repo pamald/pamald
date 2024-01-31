@@ -1,0 +1,63 @@
+parameters:
+    typeAliases:
+        pamald-version-fragment: '"major"|"minor"|"patch"|"preRelease"|"metadata"'
+        pamald-entry-relationship-action: '"none"|"add"|"remove"|"change"'
+        pamald-entry-version-action: '"none"|"upgrade"|"downgrade"'
+        pamald-entry-export: '''
+            array{
+                name: string,
+                relationshipAction: pamald-entry-relationship-action,
+                versionAction: pamald-entry-version-action,
+                isVersionChanged: bool,
+                versionPartChanged: null|string,
+                isVersionMajorChanged: bool,
+                isVersionMinorChanged: bool,
+                isVersionPatchChanged: bool,
+                isVersionPreReleaseChanged: bool,
+                isVersionMetadataChanged: bool,
+            }
+        '''
+        pamald-entry-comparer-prop-info: '''
+            array{
+                comparer?: ?callable,
+                default?: mixed,
+                direction?: -1|1,
+            }
+        '''
+        pamald-entry-comparer-prop-info-full: '''
+            array{
+                key: array-key,
+                comparer: ?callable,
+                default: mixed,
+                direction: -1|1,
+            }
+        '''
+        pamald-console-table-reporter-options: '''
+            array{
+                columns?: array<string, pamald-console-table-reporter-column-def>,
+                groups?: array<string, pamald-console-table-reporter-group-def>,
+                stream?: ?resource,
+                table?: ?\Symfony\Component\Console\Helper\Table,
+            }
+        '''
+        pamald-console-table-reporter-column-def: '''
+            array{
+                enabled: bool,
+                weight: int,
+                align: "left"|"center"|"right",
+                title: string,
+                config?: array<string, mixed>,
+            }
+        '''
+        pamald-console-table-reporter-group-def: '''
+            array{
+                enabled: bool,
+                id: string,
+                title: string,
+                weight: int,
+                showEmpty: bool,
+                emptyContent: string,
+                filter: null|bool|callable,
+                comparer: null|callable,
+            }
+        '''

@@ -1,0 +1,3 @@
+|| Name     || L Version || R Version || L Relationship || R Relationship || L Depth || R Depth ||
+| vk/rk-dk | 1.2.3     | 1.2.3     | ?              | ?              | child   | ?       |
+| vk/rk-dt | 2.2.3     | 2.2.3     | ?              | ?              | direct  | ?       |

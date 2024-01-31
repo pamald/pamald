@@ -1,0 +1,110 @@
+added:
+    expected:
+        a/b:
+            name: 'a/b'
+            relationshipAction: 'add'
+            isDirectDependencyChanged: true
+            versionAction: 'upgrade'
+            isVersionChanged: true
+            versionPartChanged: 'major'
+            isVersionMajorChanged: true
+            isVersionMinorChanged: true
+            isVersionPatchChanged: true
+            isVersionPreReleaseChanged: true
+            isVersionMetadataChanged: true
+
+    leftPackages: {}
+    rightPackages:
+        a/b:
+            name: 'a/b'
+            versionString: '1.0.0'
+            typeOfRelationship: 'prod'
+removed:
+    expected:
+        a/b:
+            name: 'a/b'
+            relationshipAction: 'remove'
+            isDirectDependencyChanged: true
+            versionAction: 'downgrade'
+            isVersionChanged: true
+            versionPartChanged: 'major'
+            isVersionMajorChanged: true
+            isVersionMinorChanged: true
+            isVersionPatchChanged: true
+            isVersionPreReleaseChanged: true
+            isVersionMetadataChanged: true
+    leftPackages:
+        a/b:
+            name: 'a/b'
+            versionString: '1.0.0'
+    rightPackages: {}
+changed.version:
+    expected:
+        a/b:
+            name: 'a/b'
+            relationshipAction: 'none'
+            isDirectDependencyChanged: false
+            versionAction: 'upgrade'
+            isVersionChanged: true
+            versionPartChanged: 'minor'
+            isVersionMajorChanged: false
+            isVersionMinorChanged: true
+            isVersionPatchChanged: true
+            isVersionPreReleaseChanged: true
+            isVersionMetadataChanged: true
+    leftPackages:
+        a/b:
+            name: 'a/b'
+            versionString: '1.0.0'
+    rightPackages:
+        a/b:
+            name: 'a/b'
+            versionString: '1.2.3'
+changed.moved-to-dev:
+    expected:
+        a/b:
+            name: 'a/b'
+            relationshipAction: 'change'
+            isDirectDependencyChanged: false
+            versionAction: 'none'
+            isVersionChanged: false
+            versionPartChanged: null
+            isVersionMajorChanged: false
+            isVersionMinorChanged: false
+            isVersionPatchChanged: false
+            isVersionPreReleaseChanged: false
+            isVersionMetadataChanged: false
+    leftPackages:
+        a/b:
+            name: 'a/b'
+            versionString: '1.2.3'
+            typeOfRelationship: 'prod'
+    rightPackages:
+        a/b:
+            name: 'a/b'
+            versionString: '1.2.3'
+            typeOfRelationship: 'dev'
+changed.indirect-direct:
+    expected:
+        a/b:
+            name: 'a/b'
+            relationshipAction: 'none'
+            isDirectDependencyChanged: true
+            versionAction: 'none'
+            isVersionChanged: false
+            versionPartChanged: null
+            isVersionMajorChanged: false
+            isVersionMinorChanged: false
+            isVersionPatchChanged: false
+            isVersionPreReleaseChanged: false
+            isVersionMetadataChanged: false
+    leftPackages:
+        a/b:
+            name: 'a/b'
+            versionString: '1.2.3'
+            isDirectDependency: false
+    rightPackages:
+        a/b:
+            name: 'a/b'
+            versionString: '1.2.3'
+            isDirectDependency: true
