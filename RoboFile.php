@@ -2,10 +2,17 @@
 
 declare(strict_types = 1);
 
+use Consolidation\AnnotatedCommand\Attributes\Argument;
+use Consolidation\AnnotatedCommand\Attributes\Command;
+use Consolidation\AnnotatedCommand\Attributes\Help;
+use Consolidation\AnnotatedCommand\Attributes\Hook;
+use Consolidation\AnnotatedCommand\Attributes\Option;
 use Consolidation\AnnotatedCommand\CommandData;
 use Consolidation\AnnotatedCommand\CommandResult;
+use Consolidation\AnnotatedCommand\Hooks\HookManager;
 use League\Container\Container as LeagueContainer;
 use NuvoleWeb\Robo\Task\Config\Robo\loadTasks as ConfigLoader;
+use Pamald\Pamald\Tests\Attributes\InitLintReporters;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Robo\Collection\CollectionBuilder;
@@ -78,6 +85,29 @@ class RoboFile extends Tasks implements LoggerAwareInterface, ConfigAwareInterfa
             ->initEnvironmentTypeAndName();
     }
 
+    #[Hook(
+        type: HookManager::PRE_COMMAND_HOOK,
+        selector: InitLintReporters::SELECTOR,
+    )]
+    public function onHookPreCommandInitLintReporters(): void
+    {
+        $lintServices = BaseReporter::getServices();
+        $container = $this->getContainer();
+        if (!($container instanceof LeagueContainer)) {
+            return;
+        }
+
+        foreach ($lintServices as $name => $class) {
+            if ($container->has($name)) {
+                continue;
+            }
+
+            $container
+                ->add($name, $class)
+                ->setShared(false);
+        }
+    }
+
     protected function initComposerInfo(): static
     {
         if ($this->composerInfo) {
@@ -146,38 +176,17 @@ class RoboFile extends Tasks implements LoggerAwareInterface, ConfigAwareInterfa
     }
 
     /**
-     * @hook pre-command @initLintReporters
+     * @phpstan-param array<string, mixed> $options
      */
-    public function initLintReporters(): void
-    {
-        $container = $this->getContainer();
-        if (!($container instanceof LeagueContainer)) {
-            return;
-        }
-
-        foreach (BaseReporter::getServices() as $name => $class) {
-            if ($container->has($name)) {
-                continue;
-            }
-
-            $container
-                ->add($name, $class)
-                ->setShared(false);
-        }
-    }
-
-    /**
-     * Exports the curren environment info.
-     *
-     * @command environment:info
-     *
-     * @param mixed[] $options
-     *
-     * @option string $format
-     *   Default: yaml
-     *
-     * @hidden
-     */
+    #[Command(name: 'environment:info')]
+    #[Help(
+        description: 'Exports the curren environment info.',
+        hidden: true,
+    )]
+    #[Option(
+        name: 'format',
+        description: 'Output format',
+    )]
     public function cmdEnvironmentInfoExecute(
         array $options = [
             'format' => 'yaml',
@@ -192,15 +201,12 @@ class RoboFile extends Tasks implements LoggerAwareInterface, ConfigAwareInterfa
         );
     }
 
-    /**
-     * Git "pre-commit" hook callback.
-     *
-     * @command githook:pre-commit
-     *
-     * @hidden
-     *
-     * @initLintReporters
-     */
+    #[Command(name: 'githook:pre-commit')]
+    #[Help(
+        description: 'Git "pre-commit" hook callback.',
+        hidden: true,
+    )]
+    #[InitLintReporters]
     public function cmdGitHookPreCommitExecute(): TaskInterface
     {
         $this->gitHook = 'pre-commit';
@@ -216,9 +222,10 @@ class RoboFile extends Tasks implements LoggerAwareInterface, ConfigAwareInterfa
             ]));
     }
 
-    /**
-     * @hook validate test
-     */
+    #[Hook(
+        type: HookManager::ARGUMENT_VALIDATOR,
+        target: 'test',
+    )]
     public function cmdTestValidate(CommandData $commandData): void
     {
         $input = $commandData->input();
@@ -235,24 +242,26 @@ class RoboFile extends Tasks implements LoggerAwareInterface, ConfigAwareInterfa
     }
 
     /**
-     * Run tests.
-     *
-     * @param string[] $suiteNames
-     *
-     * @command test
+     * @phpstan-param array<string> $suiteNames
      */
+    #[Command(name: 'test')]
+    #[Help(
+        description: 'Runs tests.',
+    )]
+    #[Argument(
+        name: 'suiteNames',
+        description: 'Codeception suite names',
+    )]
     public function cmdTestExecute(array $suiteNames): TaskInterface
     {
         return $this->getTaskCodeceptRunSuites($suiteNames);
     }
 
-    /**
-     * Run code style checkers.
-     *
-     * @command lint
-     *
-     * @initLintReporters
-     */
+    #[Command(name: 'lint')]
+    #[Help(
+        description: 'Runs code style checkers.',
+    )]
+    #[InitLintReporters]
     public function cmdLintExecute(): TaskInterface
     {
         return $this
@@ -265,47 +274,40 @@ class RoboFile extends Tasks implements LoggerAwareInterface, ConfigAwareInterfa
             ]));
     }
 
-    /**
-     * Run phpcs.
-     *
-     * @command lint:phpcs
-     *
-     * @initLintReporters
-     */
+    #[Command(name: 'lint:phpcs')]
+    #[Help(
+        description: 'Runs phpcs.',
+    )]
+    #[InitLintReporters]
     public function cmdLintPhpcsExecute(): TaskInterface
     {
         return $this->getTaskPhpcsLint();
     }
 
-    /**
-     * Runs phpstan analyze.
-     *
-     * @command lint:phpstan
-     *
-     * @initLintReporters
-     */
+    #[Command(name: 'lint:phpstan')]
+    #[Help(
+        description: 'Runs phpstan analyze.',
+    )]
+    #[InitLintReporters]
     public function cmdLintPhpstanExecute(): TaskInterface
     {
         return $this->getTaskPhpstanAnalyze();
     }
 
-    /**
-     * Runs phpmd.
-     *
-     * @command lint:phpmd
-     *
-     * @initLintReporters
-     */
+    #[Command(name: 'lint:phpmd')]
+    #[Help(
+        description: 'Runs phpmd.',
+    )]
+    #[InitLintReporters]
     public function cmdLintPhpmdExecute(): TaskInterface
     {
         return $this->getTaskPhpmdLint();
     }
 
-    /**
-     * Runs circleci validate.
-     *
-     * @command lint:circleci-config
-     */
+    #[Command(name: 'lint:circleci-config')]
+    #[Help(
+        description: 'Runs circleci validate.',
+    )]
     public function cmdLintCircleciConfigExecute(): ?TaskInterface
     {
         return $this->getTaskCircleCiConfigValidate();

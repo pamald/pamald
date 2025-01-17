@@ -2,7 +2,7 @@
 version: 2.1
 
 orbs:
-    codecov: 'codecov/codecov@3.0.0'
+    codecov: 'codecov/codecov@5'
 
 .env_app: &env_app
     SHELL: '/bin/bash'
@@ -95,7 +95,7 @@ commands:
                     command: '"$(composer config bin-dir)/robo" --ansi test unit'
             -   codecov/upload:
                     flags: 'unit'
-                    file: './tests/_output/machine/coverage/unit/coverage.xml'
+                    dir: './tests/_output/machine/coverage/unit/coverage.xml'
             -   store_test_results:
                     name: 'Store unit test results'
                     path: './tests/_output/machine/junit'
