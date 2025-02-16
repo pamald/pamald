@@ -4,17 +4,19 @@ declare(strict_types = 1);
 
 namespace Pamald\Pamald\Tests\Unit\Reporter;
 
-use Codeception\Attribute\DataProvider;
 use Pamald\Pamald\LockDiffEntry;
 use Pamald\Pamald\LockDiffer;
-use Pamald\Pamald\Reporter\MarkdownTableReporter;
+use Pamald\Pamald\Reporter\ConsoleTableReporter;
+use Pamald\Pamald\Reporter\TableReporterBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Sweetchuck\Utils\Filter\CustomFilter;
 
-/**
- * @covers \Pamald\Pamald\Reporter\TableReporterBase
- * @covers \Pamald\Pamald\Reporter\MarkdownTableReporter
- */
-class MarkdownTableReporterTest extends ReporterTestBase
+#[CoversClass(TableReporterBase::class)]
+#[CoversClass(ConsoleTableReporter::class)]
+
+class ConsoleTableReporterTest extends ReporterTestBase
 {
 
     /**
@@ -36,7 +38,7 @@ class MarkdownTableReporterTest extends ReporterTestBase
                             'emptyContent' => '-- empty --',
                             'filter' => (new CustomFilter())
                                 ->setOperator(function (LockDiffEntry $entry): bool {
-                                    return $entry->right->isDirectDependency()
+                                    return $entry->right?->isDirectDependency()
                                         && $entry->right->typeOfRelationship() === 'prod';
                                 }),
                             'comparer' => null,
@@ -50,7 +52,7 @@ class MarkdownTableReporterTest extends ReporterTestBase
                             'emptyContent' => '-- empty --',
                             'filter' => (new CustomFilter())
                                 ->setOperator(function (LockDiffEntry $entry): bool {
-                                    return $entry->right->isDirectDependency()
+                                    return $entry->right?->isDirectDependency()
                                         && $entry->right->typeOfRelationship() === 'dev';
                                 }),
                             'comparer' => null,
@@ -74,8 +76,8 @@ class MarkdownTableReporterTest extends ReporterTestBase
         ];
 
         return static::collectGenerateCases(
-            MarkdownTableReporter::class,
-            'txt',
+            ConsoleTableReporter::class,
+            'ansi',
             $optionSets,
         );
     }
@@ -85,6 +87,7 @@ class MarkdownTableReporterTest extends ReporterTestBase
      * @param null|array<string, \Pamald\Pamald\PackageInterface> $rightPackages
      * @param array<string, mixed> $options
      */
+    #[Test]
     #[DataProvider('casesGenerate')]
     public function testGenerate(
         string $expected,
@@ -98,11 +101,11 @@ class MarkdownTableReporterTest extends ReporterTestBase
 
         $differ = new LockDiffer();
         $entries = $differ->diff($leftPackages, $rightPackages);
-        (new MarkdownTableReporter())
+        (new ConsoleTableReporter())
             ->setOptions($options)
             ->generate($entries);
         rewind($options['stream']);
-        $this->tester->assertSame(
+        static::assertSame(
             $expected,
             stream_get_contents($options['stream']),
         );

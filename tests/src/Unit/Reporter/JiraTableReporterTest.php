@@ -4,17 +4,18 @@ declare(strict_types = 1);
 
 namespace Pamald\Pamald\Tests\Unit\Reporter;
 
-use Codeception\Attribute\DataProvider;
 use Pamald\Pamald\LockDiffEntry;
 use Pamald\Pamald\LockDiffer;
-use Pamald\Pamald\Reporter\ConsoleTableReporter;
+use Pamald\Pamald\Reporter\JiraTableReporter;
+use Pamald\Pamald\Reporter\TableReporterBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Sweetchuck\Utils\Filter\CustomFilter;
 
-/**
- * @covers \Pamald\Pamald\Reporter\TableReporterBase
- * @covers \Pamald\Pamald\Reporter\ConsoleTableReporter
- */
-class ConsoleTableReporterTest extends ReporterTestBase
+#[CoversClass(TableReporterBase::class)]
+#[CoversClass(JiraTableReporter::class)]
+class JiraTableReporterTest extends ReporterTestBase
 {
 
     /**
@@ -74,8 +75,8 @@ class ConsoleTableReporterTest extends ReporterTestBase
         ];
 
         return static::collectGenerateCases(
-            ConsoleTableReporter::class,
-            'ansi',
+            JiraTableReporter::class,
+            'txt',
             $optionSets,
         );
     }
@@ -85,6 +86,7 @@ class ConsoleTableReporterTest extends ReporterTestBase
      * @param null|array<string, \Pamald\Pamald\PackageInterface> $rightPackages
      * @param array<string, mixed> $options
      */
+    #[Test]
     #[DataProvider('casesGenerate')]
     public function testGenerate(
         string $expected,
@@ -98,11 +100,11 @@ class ConsoleTableReporterTest extends ReporterTestBase
 
         $differ = new LockDiffer();
         $entries = $differ->diff($leftPackages, $rightPackages);
-        (new ConsoleTableReporter())
+        (new JiraTableReporter())
             ->setOptions($options)
             ->generate($entries);
         rewind($options['stream']);
-        $this->tester->assertSame(
+        static::assertSame(
             $expected,
             stream_get_contents($options['stream']),
         );

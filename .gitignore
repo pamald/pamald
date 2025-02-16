@@ -1,10 +1,30 @@
+### Common.
+/.cache/
+/reports/
 
-/tests/_output/
-/tests/_support/_generated
+### Composer.
 /vendor/
+/pamald-pamald-*.tar
+/pamald-pamald-*.tar.gz
+/pamald-pamald-*.tar.bz2
+/pamald-pamald-*.zip
 
+### Composer Suite.
+/.composer-suite/
+/composer.*.json
+/composer.*.lock
+
+### PhpUnit.
+/phpunit.xml
+
+### sweetchuck/git-hooks.
 /.git-hooks.local
+
+### Robo.
 /robo.yml
 
+### PHPCS.
 /phpcs.xml
+
+### PHPStan.
 /phpstan.neon

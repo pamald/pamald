@@ -1,4 +1,3 @@
-
 version: 2.1
 
 orbs:
@@ -84,21 +83,25 @@ commands:
             -
                 run:
                     name: 'Run linters'
-                    command: '"$(composer config bin-dir)/robo" --ansi lint'
+                    command: |
+                        "$(composer config 'bin-dir')/robo" --ansi lint
 
     test:
         description: 'Run tests'
         steps:
             -
                 run:
-                    name: 'Codeception - unit'
-                    command: '"$(composer config bin-dir)/robo" --ansi test unit'
-            -   codecov/upload:
+                    name: 'Test - unit'
+                    command: |
+                        "$(composer config 'bin-dir')/robo" --ansi test 'unit'
+            -
+                codecov/upload:
                     flags: 'unit'
-                    dir: './tests/_output/machine/coverage/unit/coverage.xml'
-            -   store_test_results:
+                    dir: './reports/machine/coverage/'
+            -
+                store_test_results:
                     name: 'Store unit test results'
-                    path: './tests/_output/machine/junit'
+                    path: './reports/machine/result/junit.xml'
 
 jobs:
     build:

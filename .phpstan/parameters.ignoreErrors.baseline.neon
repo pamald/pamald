@@ -6,18 +6,8 @@ parameters:
 			path: ../RoboFile.php
 
 		-
-			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\:\\:setInputFile\\(\\)\\.$#"
-			count: 1
-			path: ../RoboFile.php
-
-		-
 			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Robo\\\\Collection\\\\TaskForEach\\:\\:iterationMessage\\(\\)\\.$#"
 			count: 1
-			path: ../RoboFile.php
-
-		-
-			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Robo\\\\Task\\\\Filesystem\\\\FilesystemStack\\:\\:mkdir\\(\\)\\.$#"
-			count: 4
 			path: ../RoboFile.php
 
 		-
@@ -43,21 +33,6 @@ parameters:
 		-
 			message: "#^Call to an undefined method Sweetchuck\\\\Robo\\\\Git\\\\Task\\\\GitReadStagedFilesTask\\:\\:deferTaskConfiguration\\(\\)\\.$#"
 			count: 2
-			path: ../RoboFile.php
-
-		-
-			message: "#^Method RoboFile\\:\\:getTaskCodeceptRunSuite\\(\\) has parameter \\$php with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: ../RoboFile.php
-
-		-
-			message: "#^PHPDoc tag @param for parameter \\$php contains unresolvable type\\.$#"
-			count: 1
-			path: ../RoboFile.php
-
-		-
-			message: "#^PHPDoc tag @var for variable \\$phpExecutables contains unresolvable type\\.$#"
-			count: 1
 			path: ../RoboFile.php
 
 		-

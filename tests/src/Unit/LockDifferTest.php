@@ -4,15 +4,16 @@ declare(strict_types = 1);
 
 namespace Pamald\Pamald\Tests\Unit;
 
-use Codeception\Attribute\DataProvider;
 use Pamald\Pamald\LockDiffer;
 use Pamald\Pamald\Tests\Helper\DummyPackage;
+use Pamald\Pamald\VersionAction;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Yaml\Yaml;
 
-/**
- * @covers \Pamald\Pamald\LockDiffer
- * @covers \Pamald\Pamald\VersionAction
- */
+#[CoversClass(LockDiffer::class)]
+#[CoversClass(VersionAction::class)]
 class LockDifferTest extends TestBase
 {
 
@@ -21,7 +22,7 @@ class LockDifferTest extends TestBase
      */
     public static function casesDiff(): array
     {
-        $dataDir = codecept_data_dir('LockDiffer');
+        $dataDir = static::getFixturesDir() . '/LockDiffer';
         $cases = [];
         foreach (Yaml::parseFile("$dataDir/casesDiff.yml") as $id => $raw) {
             $cases[$id] = [
@@ -47,6 +48,7 @@ class LockDifferTest extends TestBase
      * @param array<string, \Pamald\Pamald\PackageInterface> $leftPackages
      * @param array<string, \Pamald\Pamald\PackageInterface> $rightPackages
      */
+    #[Test]
     #[DataProvider('casesDiff')]
     public function testDiff(
         array $expected,
@@ -55,7 +57,7 @@ class LockDifferTest extends TestBase
     ): void {
         $lockDiffer = new LockDiffer();
         $actual = $lockDiffer->diff($leftPackages, $rightPackages);
-        $this->tester->assertSame(
+        static::assertSame(
             array_keys($expected),
             array_keys($actual),
             'entries have same keys',
@@ -68,7 +70,7 @@ class LockDifferTest extends TestBase
                 $actualEntry['right'],
             );
 
-            $this->tester->assertSame(
+            static::assertSame(
                 $expectedEntry,
                 $actualEntry,
                 "entries with key '$key' are the same",

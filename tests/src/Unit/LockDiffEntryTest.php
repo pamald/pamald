@@ -4,18 +4,18 @@ declare(strict_types = 1);
 
 namespace Pamald\Pamald\Tests\Unit;
 
-use Codeception\Attribute\DataProvider;
 use Pamald\Pamald\LockDiffEntry;
 use Pamald\Pamald\PackageInterface;
 use Pamald\Pamald\RelationshipAction;
 use Pamald\Pamald\Tests\Helper\DummyPackage;
 use Pamald\Pamald\VersionAction;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Yaml\Yaml;
 
-/**
- * @covers \Pamald\Pamald\LockDiffEntry
- * @covers \Pamald\Pamald\VersionAction
- */
+#[CoversClass(LockDiffEntry::class)]
+#[CoversClass(VersionAction::class)]
 class LockDiffEntryTest extends TestBase
 {
 
@@ -24,7 +24,7 @@ class LockDiffEntryTest extends TestBase
      */
     public static function casesConstructor(): array
     {
-        $dataDir = codecept_data_dir('LockDiffEntry');
+        $dataDir = static::getFixturesDir() . '/LockDiffEntry';
         $cases = [];
         foreach (Yaml::parseFile("$dataDir/casesConstruct.yml") as $id => $data) {
             if (isset($data['expected']['relationshipAction'])) {
@@ -51,6 +51,7 @@ class LockDiffEntryTest extends TestBase
     /**
      * @phpstan-param array<string, mixed> $expected
      */
+    #[Test]
     #[DataProvider('casesConstructor')]
     public function testConstructor(
         array $expected,

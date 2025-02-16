@@ -41,7 +41,7 @@ class ReporterTestBase extends TestBase
     ): array {
         $classParts = explode('\\', $classFqn);
         $class = end($classParts);
-        $dataDir = codecept_data_dir('Reporter');
+        $dataDir = static::getFixturesDir() . '/Reporter';
         $inputs = Yaml::parseFile("$dataDir/cases.yml");
         $expectedFiles = (new Finder())
             ->in("$dataDir/$class")

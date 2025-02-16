@@ -4,17 +4,18 @@ declare(strict_types = 1);
 
 namespace Pamald\Pamald\Tests\Unit\Reporter;
 
-use Codeception\Attribute\DataProvider;
 use Pamald\Pamald\LockDiffEntry;
 use Pamald\Pamald\LockDiffer;
-use Pamald\Pamald\Reporter\JiraTableReporter;
+use Pamald\Pamald\Reporter\MarkdownTableReporter;
+use Pamald\Pamald\Reporter\TableReporterBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Sweetchuck\Utils\Filter\CustomFilter;
 
-/**
- * @covers \Pamald\Pamald\Reporter\TableReporterBase
- * @covers \Pamald\Pamald\Reporter\JiraTableReporter
- */
-class JiraTableReporterTest extends ReporterTestBase
+#[CoversClass(TableReporterBase::class)]
+#[CoversClass(MarkdownTableReporter::class)]
+class MarkdownTableReporterTest extends ReporterTestBase
 {
 
     /**
@@ -36,7 +37,7 @@ class JiraTableReporterTest extends ReporterTestBase
                             'emptyContent' => '-- empty --',
                             'filter' => (new CustomFilter())
                                 ->setOperator(function (LockDiffEntry $entry): bool {
-                                    return $entry->right?->isDirectDependency()
+                                    return $entry->right->isDirectDependency()
                                         && $entry->right->typeOfRelationship() === 'prod';
                                 }),
                             'comparer' => null,
@@ -50,7 +51,7 @@ class JiraTableReporterTest extends ReporterTestBase
                             'emptyContent' => '-- empty --',
                             'filter' => (new CustomFilter())
                                 ->setOperator(function (LockDiffEntry $entry): bool {
-                                    return $entry->right?->isDirectDependency()
+                                    return $entry->right->isDirectDependency()
                                         && $entry->right->typeOfRelationship() === 'dev';
                                 }),
                             'comparer' => null,
@@ -74,7 +75,7 @@ class JiraTableReporterTest extends ReporterTestBase
         ];
 
         return static::collectGenerateCases(
-            JiraTableReporter::class,
+            MarkdownTableReporter::class,
             'txt',
             $optionSets,
         );
@@ -85,6 +86,7 @@ class JiraTableReporterTest extends ReporterTestBase
      * @param null|array<string, \Pamald\Pamald\PackageInterface> $rightPackages
      * @param array<string, mixed> $options
      */
+    #[Test]
     #[DataProvider('casesGenerate')]
     public function testGenerate(
         string $expected,
@@ -98,11 +100,11 @@ class JiraTableReporterTest extends ReporterTestBase
 
         $differ = new LockDiffer();
         $entries = $differ->diff($leftPackages, $rightPackages);
-        (new JiraTableReporter())
+        (new MarkdownTableReporter())
             ->setOptions($options)
             ->generate($entries);
         rewind($options['stream']);
-        $this->tester->assertSame(
+        static::assertSame(
             $expected,
             stream_get_contents($options['stream']),
         );

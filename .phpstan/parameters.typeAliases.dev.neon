@@ -1,14 +1,21 @@
 parameters:
-    typeAliases:
-        dummy-package-values: '''
-            array{
-                name: string,
-                type?: null|string,
-                versionString?: null|string,
-                typeOfRelationship?: null|string,
-                isDirectDependency?: null|bool,
-                homepage?: null|string,
-                vcsInfo?: null|array<string, mixed>,
-                issueTracker?: null|array<string, mixed>,
-            }
-        '''
+	typeAliases:
+		php-executable: '''
+			array{
+				enabled: bool,
+				envVars?: array<string, ?string>,
+				command: array<string>,
+			}
+		'''
+		dummy-package-values: '''
+			array{
+				name: string,
+				type?: null|string,
+				versionString?: null|string,
+				typeOfRelationship?: null|string,
+				isDirectDependency?: null|bool,
+				homepage?: null|string,
+				vcsInfo?: null|array<string, mixed>,
+				issueTracker?: null|array<string, mixed>,
+			}
+		'''

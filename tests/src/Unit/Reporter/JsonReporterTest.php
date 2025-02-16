@@ -4,15 +4,17 @@ declare(strict_types = 1);
 
 namespace Pamald\Pamald\Tests\Unit\Reporter;
 
-use Codeception\Attribute\DataProvider;
+use Pamald\Pamald\LockDiffEntry;
 use Pamald\Pamald\LockDiffer;
+use Pamald\Pamald\PackageJsonSerializerTrait;
 use Pamald\Pamald\Reporter\JsonReporter;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 
-/**
- * @covers \Pamald\Pamald\Reporter\JsonReporter
- * @covers \Pamald\Pamald\LockDiffEntry
- * @covers \Pamald\Pamald\PackageJsonSerializerTrait
- */
+#[CoversClass(JsonReporter::class)]
+#[CoversClass(LockDiffEntry::class)]
+#[CoversClass(PackageJsonSerializerTrait::class)]
 class JsonReporterTest extends ReporterTestBase
 {
 
@@ -40,6 +42,7 @@ class JsonReporterTest extends ReporterTestBase
      * @param null|array<string, \Pamald\Pamald\PackageInterface> $rightPackages
      * @param array<string, mixed> $options
      */
+    #[Test]
     #[DataProvider('casesGenerate')]
     public function testGenerate(
         string $expected,
@@ -57,7 +60,7 @@ class JsonReporterTest extends ReporterTestBase
             ->setOptions($options)
             ->generate($entries);
         rewind($options['stream']);
-        $this->tester->assertSame(
+        static::assertSame(
             $expected,
             stream_get_contents($options['stream']),
         );
