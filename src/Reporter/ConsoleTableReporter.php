@@ -65,11 +65,17 @@ class ConsoleTableReporter extends TableReporterBase
         }
         $this->table->setRows([]);
 
-        $this
+        $stats = $this
             ->normalizeColumns()
             ->normalizeGroups()
             ->setTableHeaders()
-            ->setTableRows()
+            ->setTableRows();
+
+        if ($stats['isEmpty'] && $this->getQuiet()) {
+            return $this;
+        }
+
+        $this
             ->table
             ->render();
 
@@ -87,8 +93,14 @@ class ConsoleTableReporter extends TableReporterBase
         return $this;
     }
 
-    protected function setTableRows(): static
+    /**
+     * @return array<string, mixed>
+     */
+    protected function setTableRows(): array
     {
+        $stats = [
+            'isEmpty' => true,
+        ];
         $columns = $this->getColumns();
         $groupDefs = $this->getGroups();
         $groups = $this->groupEntries();
@@ -98,6 +110,7 @@ class ConsoleTableReporter extends TableReporterBase
             $groupDef = $groupDefs[$groupId];
             if ($numOfGroups > 1) {
                 if (!$entries && $groupDef['showEmpty']) {
+                    $stats['isEmpty'] = false;
                     $this->table->addRow([
                         new TableCell(
                             $groupDef['title'],
@@ -120,6 +133,7 @@ class ConsoleTableReporter extends TableReporterBase
                     continue;
                 }
 
+                $stats['isEmpty'] =  false;
                 $this->table->addRow([
                     new TableCell(
                         $groupDef['title'],
@@ -132,10 +146,11 @@ class ConsoleTableReporter extends TableReporterBase
             }
 
             foreach ($entries as $entry) {
+                $stats['isEmpty'] = false;
                 $this->table->addRow($this->buildTableRow($columns, $entry));
             }
         }
 
-        return $this;
+        return $stats;
     }
 }

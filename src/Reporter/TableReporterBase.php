@@ -14,6 +14,20 @@ abstract class TableReporterBase implements ReporterInterface
 {
     use StreamOutputTrait;
 
+    protected bool $quiet = true;
+
+    public function getQuiet(): bool
+    {
+        return $this->quiet;
+    }
+
+    public function setQuiet(bool $quiet): static
+    {
+        $this->quiet = $quiet;
+
+        return $this;
+    }
+
     /**
      * @phpstan-var array<string, \Pamald\Pamald\LockDiffEntry>
      */
@@ -225,6 +239,10 @@ abstract class TableReporterBase implements ReporterInterface
      */
     public function setOptions(array $options): static
     {
+        if (array_key_exists('quiet', $options)) {
+            $this->setQuiet($options['quiet']);
+        }
+
         if (array_key_exists('columns', $options)) {
             $this->setColumns($options['columns']);
         }

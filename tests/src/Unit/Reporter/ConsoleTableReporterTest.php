@@ -25,6 +25,12 @@ class ConsoleTableReporterTest extends ReporterTestBase
     public static function casesGenerate(): array
     {
         $optionSets = [
+            'no-diff' => [
+                'default' => [],
+                'noisy' => [
+                    'quiet' => false,
+                ],
+            ],
             'all-in-one' => [
                 'default' => [],
                 'group-by-right-direct' => [

@@ -18,12 +18,16 @@ class MarkdownTableReporter extends TableReporterBase
     {
         $this->table = new MarkdownTable();
         $this->entries = $entries;
-        $this
+        $stats = $this
             ->normalizeColumns()
             ->normalizeGroups()
             ->setTableHeaders()
             ->setTableAlignments()
             ->setTableRows();
+
+        if ($stats['isEmpty'] && $this->getQuiet()) {
+            return $this;
+        }
 
         fwrite(
             $this->getStream(),
@@ -58,18 +62,25 @@ class MarkdownTableReporter extends TableReporterBase
         return $this;
     }
 
-    protected function setTableRows(): static
+    /**
+     * @return array<string, mixed>
+     */
+    protected function setTableRows(): array
     {
+        $stats = [
+            'isEmpty' => true,
+        ];
         $columns = $this->getColumns();
         $groups = $this->groupEntries();
         foreach ($groups as $entries) {
             // @todo Group support.
             foreach ($entries as $entry) {
+                $stats['isEmpty'] = false;
                 $this->table->row(array_values($this->buildTableRow($columns, $entry)));
             }
         }
 
-        return $this;
+        return $stats;
     }
 
     protected function getRenderedTable(): string
