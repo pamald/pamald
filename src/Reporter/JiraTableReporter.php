@@ -10,6 +10,7 @@ class JiraTableReporter extends MarkdownTableReporter
     protected function getRenderedTable(): string
     {
         $lines = explode(\PHP_EOL, parent::getRenderedTable());
+        // @phpstan-ignore-next-line isset.offset
         if (isset($lines[0])) {
             $lines[0] = str_replace('|', '||', $lines[0]);
         }

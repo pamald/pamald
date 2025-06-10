@@ -11,8 +11,9 @@ parameters:
 			array{
 				name: string,
 				type?: null|string,
+				link?: null|string,
+				environment?: null|string,
 				versionString?: null|string,
-				typeOfRelationship?: null|string,
 				isDirectDependency?: null|bool,
 				homepage?: null|string,
 				vcsInfo?: null|array<string, mixed>,

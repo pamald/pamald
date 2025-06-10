@@ -1,1 +1,1 @@
-|| Name || L Version || R Version || L Relationship || R Relationship || L Depth || R Depth ||
+|| Name || L Version || R Version || L Type || R Type || L Link || R Link || L Env || R Env || L Depth || R Depth ||

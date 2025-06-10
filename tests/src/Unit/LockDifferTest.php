@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace Pamald\Pamald\Tests\Unit;
 
 use Pamald\Pamald\LockDiffer;
-use Pamald\Pamald\Tests\Helper\DummyPackage;
+use Pamald\Pamald\Tests\Helper\DummyDependency;
 use Pamald\Pamald\VersionAction;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -32,11 +32,11 @@ class LockDifferTest extends TestBase
             ];
 
             foreach ($raw['leftPackages'] ?? [] as $packageName => $packageValues) {
-                $cases[$id][1][$packageName] = new DummyPackage($packageValues);
+                $cases[$id][1][$packageName] = new DummyDependency($packageValues);
             }
 
             foreach ($raw['rightPackages'] ?? [] as $packageName => $packageValues) {
-                $cases[$id][2][$packageName] = new DummyPackage($packageValues);
+                $cases[$id][2][$packageName] = new DummyDependency($packageValues);
             }
         }
 
@@ -45,8 +45,8 @@ class LockDifferTest extends TestBase
 
     /**
      * @param array<string, array<string, mixed>> $expected
-     * @param array<string, \Pamald\Pamald\PackageInterface> $leftPackages
-     * @param array<string, \Pamald\Pamald\PackageInterface> $rightPackages
+     * @param array<string, \Pamald\Pamald\DependencyInterface> $leftPackages
+     * @param array<string, \Pamald\Pamald\DependencyInterface> $rightPackages
      */
     #[Test]
     #[DataProvider('casesDiff')]

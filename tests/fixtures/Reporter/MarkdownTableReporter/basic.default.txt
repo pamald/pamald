@@ -1,4 +1,5 @@
-| Name     | L Version | R Version | L Relationship | R Relationship | L Depth | R Depth |
-|----------|-----------|-----------|----------------|----------------|---------|---------|
-| vk/rk-dk | 1.2.3     | 1.2.3     | ?              | ?              | child   | ?       |
-| vk/rk-dt | 2.2.3     | 2.2.3     | ?              | ?              | direct  | ?       |
+| Name     | L Version | R Version | L Type   | R Type   | L Link   | R Link   | L Env      | R Env      | L Depth | R Depth |
+|----------|-----------|-----------|----------|----------|----------|----------|------------|------------|---------|---------|
+| php      | 8.3.0     | 8.4.0     | platform | platform | required | required | production | production | direct  | direct  |
+| vk/rk-dt | 2.2.3     | 2.2.3     | package  | package  | required | required | production | production | direct  | ?       |
+| vk/rk-dk | 1.2.3     | 1.2.3     | package  | package  | required | required | production | production | child   | ?       |

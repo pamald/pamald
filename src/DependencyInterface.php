@@ -10,12 +10,16 @@ use Sweetchuck\Utils\VersionNumber;
  * @todo Add "downloaded from URL" or something like that.
  * @todo Implement \JsonSerialize.
  */
-interface PackageInterface
+interface DependencyInterface
 {
 
     public function name(): string;
 
-    public function type(): ?string;
+    public function type(): ?DependencyType;
+
+    public function link(): ?DependencyLink;
+
+    public function environment(): ?DependencyEnvironment;
 
     /**
      * Semantic version number, branch name or version constraint.
@@ -27,18 +31,6 @@ interface PackageInterface
     public function versionString(): ?string;
 
     public function version(): ?VersionNumber;
-
-    /**
-     * @return null|string
-     *   - prod_required
-     *   - prod_optional
-     *   - dev_required
-     *   - peer
-     *
-     * @todo Maybe the "indirect" should be valid value as well.
-     * @todo Enum vs string?
-     */
-    public function typeOfRelationship(): ?string;
 
     public function isDirectDependency(): ?bool;
 

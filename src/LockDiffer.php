@@ -11,28 +11,31 @@ class LockDiffer
 {
 
     /**
-     * @param array<string, \Pamald\Pamald\PackageInterface> $leftPackages
-     * @param array<string, \Pamald\Pamald\PackageInterface> $rightPackages
+     * @param array<string, \Pamald\Pamald\DependencyInterface> $leftDependencies
+     * @param array<string, \Pamald\Pamald\DependencyInterface> $rightDependencies
      *
      * @return array<string, LockDiffEntry>
      */
     public function diff(
-        array $leftPackages = [],
-        array $rightPackages = [],
+        array $leftDependencies = [],
+        array $rightDependencies = [],
     ): array {
-        // @todo Maybe both $leftPackages and $rightPackages are also optional.
-        assert($leftPackages || $rightPackages, 'One of the $leftPackages or $rightPackages is required.');
+        // @todo Maybe both $leftDependencies and $rightDependencies are also optional.
+        assert(
+            $leftDependencies || $rightDependencies,
+            'One of the $leftPackages or $rightPackages is required.',
+        );
 
-        $packageNames = array_unique(array_merge(
-            array_keys($leftPackages),
-            array_keys($rightPackages),
+        $dependencyNames = array_unique(array_merge(
+            array_keys($leftDependencies),
+            array_keys($rightDependencies),
         ));
-        sort($packageNames);
+        sort($dependencyNames);
 
         $entries = [];
-        foreach ($packageNames as $name) {
-            $left = $leftPackages[$name] ?? null;
-            $right = $rightPackages[$name] ?? null;
+        foreach ($dependencyNames as $name) {
+            $left = $leftDependencies[$name] ?? null;
+            $right = $rightDependencies[$name] ?? null;
             if (!$this->isChanged($left, $right)) {
                 continue;
             }
@@ -43,9 +46,12 @@ class LockDiffer
         return $entries;
     }
 
-    public function isChanged(?PackageInterface $left, ?PackageInterface $right): bool
+    public function isChanged(?DependencyInterface $left, ?DependencyInterface $right): bool
     {
-        assert($left || $right, 'One of the $left or $right is required.');
+        assert(
+            $left || $right,
+            'One of the $left or $right is required.',
+        );
 
         if (!$left || !$right) {
             return true;
@@ -55,7 +61,9 @@ class LockDiffer
         // changed based on the composer.json#/repositories.
         // @todo Applied patches can be changed.
         return $left->versionString() !== $right->versionString()
-            || $left->typeOfRelationship() !== $right->typeOfRelationship()
+            || $left->type() !== $right->type()
+            || $left->link() !== $right->link()
+            || $left->environment() !== $right->environment()
             || $left->isDirectDependency() !== $right->isDirectDependency();
     }
 }

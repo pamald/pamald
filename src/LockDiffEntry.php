@@ -12,6 +12,12 @@ class LockDiffEntry
 
     public readonly string $name;
 
+    public readonly bool $isTypeChanged;
+
+    public readonly bool $isLinkChanged;
+
+    public readonly bool $isEnvironmentChanged;
+
     public readonly RelationshipAction $relationshipAction;
 
     public readonly bool $isDirectDependencyChanged;
@@ -32,13 +38,13 @@ class LockDiffEntry
 
     public readonly bool $isVersionMetadataChanged;
 
-    public readonly ?PackageInterface $left;
+    public readonly ?DependencyInterface $left;
 
-    public readonly ?PackageInterface $right;
+    public readonly ?DependencyInterface $right;
 
     public function __construct(
-        ?PackageInterface $left = null,
-        ?PackageInterface $right = null,
+        ?DependencyInterface $left = null,
+        ?DependencyInterface $right = null,
     ) {
         assert($left || $right, 'At least one package has to be provided');
 
@@ -60,7 +66,7 @@ class LockDiffEntry
         }
     }
 
-    public function initRelationship(): static
+    protected function initRelationship(): static
     {
         if (!$this->left) {
             $this->relationshipAction = RelationshipAction::Add;
@@ -76,16 +82,19 @@ class LockDiffEntry
             return $this;
         }
 
-        $this->relationshipAction = $this->left->typeOfRelationship() === $this->right->typeOfRelationship() ?
-            RelationshipAction::None
-            : RelationshipAction::Change;
+        $this->isTypeChanged = $this->left->type() !== $this->right->type();
+        $this->isLinkChanged = $this->left->link() !== $this->right->link();
+        $this->isEnvironmentChanged = $this->left->environment() !== $this->right->environment();
+        $this->relationshipAction = $this->isTypeChanged || $this->isLinkChanged || $this->isEnvironmentChanged
+            ? RelationshipAction::Change
+            : RelationshipAction::None;
 
         $this->isDirectDependencyChanged = $this->left->isDirectDependency() !== $this->right->isDirectDependency();
 
         return $this;
     }
 
-    public function initVersionAction(): static
+    protected function initVersionAction(): static
     {
         if (!$this->left) {
             $this->versionAction = VersionAction::Upgrade;

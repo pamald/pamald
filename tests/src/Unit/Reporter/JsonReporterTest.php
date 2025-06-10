@@ -6,7 +6,7 @@ namespace Pamald\Pamald\Tests\Unit\Reporter;
 
 use Pamald\Pamald\LockDiffEntry;
 use Pamald\Pamald\LockDiffer;
-use Pamald\Pamald\PackageJsonSerializerTrait;
+use Pamald\Pamald\DependencyJsonSerializerTrait;
 use Pamald\Pamald\Reporter\JsonReporter;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -14,7 +14,7 @@ use PHPUnit\Framework\Attributes\Test;
 
 #[CoversClass(JsonReporter::class)]
 #[CoversClass(LockDiffEntry::class)]
-#[CoversClass(PackageJsonSerializerTrait::class)]
+#[CoversClass(DependencyJsonSerializerTrait::class)]
 class JsonReporterTest extends ReporterTestBase
 {
 
@@ -38,8 +38,8 @@ class JsonReporterTest extends ReporterTestBase
     }
 
     /**
-     * @param null|array<string, \Pamald\Pamald\PackageInterface> $leftPackages
-     * @param null|array<string, \Pamald\Pamald\PackageInterface> $rightPackages
+     * @param null|array<string, \Pamald\Pamald\DependencyInterface> $leftPackages
+     * @param null|array<string, \Pamald\Pamald\DependencyInterface> $rightPackages
      * @param array<string, mixed> $options
      */
     #[Test]

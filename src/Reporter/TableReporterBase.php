@@ -4,12 +4,18 @@ declare(strict_types = 1);
 
 namespace Pamald\Pamald\Reporter;
 
+use Pamald\Pamald\DependencyEnvironment;
+use Pamald\Pamald\DependencyType;
 use Pamald\Pamald\LockDiffEntry;
-use Pamald\Pamald\PackageInterface;
+use Pamald\Pamald\DependencyInterface;
 use Pamald\Pamald\ReporterInterface;
 use Sweetchuck\Utils\Comparer\ArrayValueComparer;
 use Sweetchuck\Utils\Filter\EnabledFilter;
 
+/**
+ * @phpstan-import-type PamaldConsoleTableReporterColumnDef from \Pamald\Pamald\Phpstan
+ * @phpstan-import-type PamaldConsoleTableReporterGroupDef  from \Pamald\Pamald\Phpstan
+ */
 abstract class TableReporterBase implements ReporterInterface
 {
     use StreamOutputTrait;
@@ -34,64 +40,12 @@ abstract class TableReporterBase implements ReporterInterface
     public array $entries;
 
     /**
-     * @phpstan-var array<string, pamald-console-table-reporter-column-def>
+     * @phpstan-var array<string, PamaldConsoleTableReporterColumnDef>
      */
-    protected array $columns = [
-        'name' => [
-            'enabled' => true,
-            'weight' => 0,
-            'align' => 'left',
-            'title' => 'Name',
-        ],
-        'leftVersionString' => [
-            'enabled' => true,
-            'weight' => 1,
-            'align' => 'left',
-            'title' => 'L Version',
-        ],
-        'rightVersionString' => [
-            'enabled' => true,
-            'weight' => 2,
-            'align' => 'left',
-            'title' => 'R Version',
-            'config' => [
-                'showDirection' => true,
-            ],
-        ],
-        'leftTypeOfRelationship' => [
-            'enabled' => true,
-            'weight' => 3,
-            'align' => 'left',
-            'title' => 'L Relationship',
-            'config' => [
-                'showDirection' => true,
-            ],
-        ],
-        'rightTypeOfRelationship' => [
-            'enabled' => true,
-            'weight' => 4,
-            'align' => 'left',
-            'title' => 'R Relationship',
-            'config' => [
-                'showDirection' => true,
-            ],
-        ],
-        'leftDirectDependency' => [
-            'enabled' => true,
-            'weight' => 5,
-            'align' => 'left',
-            'title' => 'L Depth',
-        ],
-        'rightDirectDependency' => [
-            'enabled' => true,
-            'weight' => 6,
-            'align' => 'left',
-            'title' => 'R Depth',
-        ],
-    ];
+    protected array $columns = [];
 
     /**
-     * @phpstan-return array<string, pamald-console-table-reporter-column-def>
+     * @phpstan-return array<string, PamaldConsoleTableReporterColumnDef>
      */
     public function getColumns(): array
     {
@@ -99,7 +53,7 @@ abstract class TableReporterBase implements ReporterInterface
     }
 
     /**
-     * @phpstan-param array<string, pamald-console-table-reporter-column-def> $columns
+     * @phpstan-param array<string, PamaldConsoleTableReporterColumnDef> $columns
      */
     public function setColumns(array $columns): static
     {
@@ -108,10 +62,98 @@ abstract class TableReporterBase implements ReporterInterface
         return $this;
     }
 
+    /**
+     * @phpstan-return array<string, PamaldConsoleTableReporterColumnDef>
+     */
+    public function getDefaultColumns(): array
+    {
+        $weight = -1;
+
+        return [
+            'name' => [
+                'enabled' => true,
+                'weight' => ++$weight,
+                'align' => 'left',
+                'title' => 'Name',
+            ],
+            'leftVersionString' => [
+                'enabled' => true,
+                'weight' => ++$weight,
+                'align' => 'left',
+                'title' => 'L Version',
+            ],
+            'rightVersionString' => [
+                'enabled' => true,
+                'weight' => ++$weight,
+                'align' => 'left',
+                'title' => 'R Version',
+                'config' => [
+                    'showDirection' => true,
+                ],
+            ],
+            'leftType' => [
+                'enabled' => true,
+                'weight' => ++$weight,
+                'align' => 'left',
+                'title' => 'L Type',
+                'config' => [],
+            ],
+            'rightType' => [
+                'enabled' => true,
+                'weight' => ++$weight,
+                'align' => 'left',
+                'title' => 'R Type',
+                'config' => [],
+            ],
+            'leftLink' => [
+                'enabled' => true,
+                'weight' => ++$weight,
+                'align' => 'left',
+                'title' => 'L Link',
+                'config' => [],
+            ],
+            'rightLink' => [
+                'enabled' => true,
+                'weight' => ++$weight,
+                'align' => 'left',
+                'title' => 'R Link',
+                'config' => [],
+            ],
+            'leftEnvironment' => [
+                'enabled' => true,
+                'weight' => ++$weight,
+                'align' => 'left',
+                'title' => 'L Env',
+                'config' => [],
+            ],
+            'rightEnvironment' => [
+                'enabled' => true,
+                'weight' => ++$weight,
+                'align' => 'left',
+                'title' => 'R Env',
+                'config' => [],
+            ],
+            'leftDirectDependency' => [
+                'enabled' => true,
+                'weight' => ++$weight,
+                'align' => 'left',
+                'title' => 'L Depth',
+                'config' => [],
+            ],
+            'rightDirectDependency' => [
+                'enabled' => true,
+                'weight' => ++$weight,
+                'align' => 'left',
+                'title' => 'R Depth',
+                'config' => [],
+            ],
+        ];
+    }
+
     protected function normalizeColumns(): static
     {
         $columns = array_filter(
-            $this->getColumns(),
+            $this->getColumns() ?: $this->getDefaultColumns(),
             new EnabledFilter(),
         );
 
@@ -142,23 +184,12 @@ abstract class TableReporterBase implements ReporterInterface
     }
 
     /**
-     * @phpstan-var array<string, pamald-console-table-reporter-group-def>
+     * @phpstan-var array<string, PamaldConsoleTableReporterGroupDef>
      */
-    protected array $groups = [
-        'other' => [
-            'enabled' => true,
-            'id' => 'other',
-            'title' => 'Other',
-            'weight' => 999,
-            'showEmpty' => false,
-            'emptyContent' => '-- empty --',
-            'filter' => null,
-            'comparer' => null,
-        ],
-    ];
+    protected array $groups = [];
 
     /**
-     * @phpstan-return array<string, pamald-console-table-reporter-group-def>
+     * @phpstan-return array<string, PamaldConsoleTableReporterGroupDef>
      */
     public function getGroups(): array
     {
@@ -166,7 +197,7 @@ abstract class TableReporterBase implements ReporterInterface
     }
 
     /**
-     * @phpstan-param array<string, pamald-console-table-reporter-group-def> $groups
+     * @phpstan-param array<string, PamaldConsoleTableReporterGroupDef> $groups
      */
     public function setGroups(array $groups): static
     {
@@ -175,12 +206,141 @@ abstract class TableReporterBase implements ReporterInterface
         return $this;
     }
 
+    /**
+     * @phpstan-return array<string, PamaldConsoleTableReporterGroupDef>
+     */
+    public function getDefaultGroups(): array
+    {
+        $filterIsPlatform = function (LockDiffEntry $entry): bool {
+            return $entry->left?->type() === DependencyType::Platform
+                || $entry->right?->type() === DependencyType::Platform;
+        };
+
+        $filterIsProductionDirect = function (LockDiffEntry $entry): bool {
+            $isProduction = $entry->left?->environment() === DependencyEnvironment::Production
+                || $entry->right?->environment() === DependencyEnvironment::Production;
+            $isDirect = $entry->left?->isDirectDependency() === true
+                || $entry->right?->isDirectDependency() === true;
+
+            return $isProduction && $isDirect;
+        };
+
+        $filterIsProductionIndirect = function (LockDiffEntry $entry): bool {
+            $isProduction = $entry->left?->environment() === DependencyEnvironment::Production
+                || $entry->right?->environment() === DependencyEnvironment::Production;
+            $isIndirect = $entry->left?->isDirectDependency() !== true
+                || $entry->right?->isDirectDependency() !== true;
+
+            return $isProduction && $isIndirect;
+        };
+
+        $filterIsDevelopmentDirect = function (LockDiffEntry $entry): bool {
+            $isDevelopment = $entry->left?->environment() === DependencyEnvironment::Development
+                || $entry->right?->environment() === DependencyEnvironment::Development;
+            $isDirect = $entry->left?->isDirectDependency() === true
+                || $entry->right?->isDirectDependency() === true;
+
+            return $isDevelopment && $isDirect;
+        };
+
+        $filterIsDevelopmentIndirect = function (LockDiffEntry $entry): bool {
+            $isDevelopment = $entry->left?->environment() === DependencyEnvironment::Development
+                || $entry->right?->environment() === DependencyEnvironment::Development;
+            $isIndirect = $entry->left?->isDirectDependency() !== true
+                || $entry->right?->isDirectDependency() !== true;
+
+            return $isDevelopment && $isIndirect;
+        };
+
+        $weight = -1;
+        $showHeaderForNonEmpty = true;
+
+        return [
+            'platform' => [
+                'enabled' => true,
+                'id' => 'platform',
+                'title' => 'Platform',
+                'weight' => ++$weight,
+                'showEmpty' => false,
+                'emptyContent' => '-- empty --',
+                'showHeaderForNonEmpty' => $showHeaderForNonEmpty,
+                'filter' => $filterIsPlatform,
+                'comparer' => null,
+            ],
+            'production-direct' => [
+                'enabled' => true,
+                'id' => 'production-direct',
+                'title' => 'Production - Direct',
+                'weight' => ++$weight,
+                'showEmpty' => false,
+                'emptyContent' => '-- empty --',
+                'showHeaderForNonEmpty' => $showHeaderForNonEmpty,
+                'filter' => $filterIsProductionDirect,
+                'comparer' => null,
+            ],
+            'production-indirect' => [
+                'enabled' => true,
+                'id' => 'production-indirect',
+                'title' => 'Production - Indirect',
+                'weight' => ++$weight,
+                'showEmpty' => false,
+                'emptyContent' => '-- empty --',
+                'showHeaderForNonEmpty' => $showHeaderForNonEmpty,
+                'filter' => $filterIsProductionIndirect,
+                'comparer' => null,
+            ],
+            'development-direct' => [
+                'enabled' => true,
+                'id' => 'development-direct',
+                'title' => 'Development - Direct',
+                'weight' => ++$weight,
+                'showEmpty' => false,
+                'emptyContent' => '-- empty --',
+                'showHeaderForNonEmpty' => $showHeaderForNonEmpty,
+                'filter' => $filterIsDevelopmentDirect,
+                'comparer' => null,
+            ],
+            'development-indirect' => [
+                'enabled' => true,
+                'id' => 'development-indirect',
+                'title' => 'Development - Indirect',
+                'weight' => ++$weight,
+                'showEmpty' => false,
+                'emptyContent' => '-- empty --',
+                'showHeaderForNonEmpty' => $showHeaderForNonEmpty,
+                'filter' => $filterIsDevelopmentIndirect,
+                'comparer' => null,
+            ],
+            'other' => [
+                'enabled' => true,
+                'id' => 'other',
+                'title' => 'Other',
+                'weight' => 999,
+                'showEmpty' => false,
+                'emptyContent' => '-- empty --',
+                'showHeaderForNonEmpty' => $showHeaderForNonEmpty,
+                'filter' => null,
+                'comparer' => null,
+            ],
+        ];
+    }
+
     protected function normalizeGroups(): static
     {
-        $groups = array_filter(
-            $this->getGroups(),
-            new EnabledFilter(),
-        );
+        $groups = $this->getGroups() ?: $this->getDefaultGroups();
+        foreach ($groups as $id => &$group) {
+            $group['id'] = $id;
+            $group += [
+                'enabled' => true,
+                'title' => $group['id'],
+                'showEmpty' => true,
+                'emptyContent' => '-- empty --',
+                'showHeaderForNonEmpty' => false,
+                'filter' => null,
+                'comparer' => null,
+            ];
+        }
+        $groups = array_filter($groups, new EnabledFilter());
 
         uasort(
             $groups,
@@ -191,10 +351,6 @@ abstract class TableReporterBase implements ReporterInterface
                     ],
                 ]),
         );
-
-        foreach ($groups as $id => &$group) {
-            $group['id'] = $id;
-        }
 
         $this->setGroups($groups);
 
@@ -259,7 +415,7 @@ abstract class TableReporterBase implements ReporterInterface
     }
 
     /**
-     * @phpstan-param array<string, pamald-console-table-reporter-column-def> $columns
+     * @phpstan-param array<string, PamaldConsoleTableReporterColumnDef> $columns
      *
      * @phpstan-return array<string, string>
      */
@@ -280,12 +436,28 @@ abstract class TableReporterBase implements ReporterInterface
                     $row[$colId] = $this->buildTableCellVersionString($colId, $entry->right);
                     break;
 
-                case 'leftTypeOfRelationship':
-                    $row[$colId] = $this->buildTableCellTypeOfRelationship($colId, $entry->left);
+                case 'leftType':
+                    $row[$colId] = $this->buildTableCellType($colId, $entry->left);
                     break;
 
-                case 'rightTypeOfRelationship':
-                    $row[$colId] = $this->buildTableCellTypeOfRelationship($colId, $entry->right);
+                case 'rightType':
+                    $row[$colId] = $this->buildTableCellType($colId, $entry->right);
+                    break;
+
+                case 'leftLink':
+                    $row[$colId] = $this->buildTableCellLink($colId, $entry->left);
+                    break;
+
+                case 'rightLink':
+                    $row[$colId] = $this->buildTableCellLink($colId, $entry->right);
+                    break;
+
+                case 'leftEnvironment':
+                    $row[$colId] = $this->buildTableCellEnvironment($colId, $entry->left);
+                    break;
+
+                case 'rightEnvironment':
+                    $row[$colId] = $this->buildTableCellEnvironment($colId, $entry->right);
                     break;
 
                 case 'leftDirectDependency':
@@ -301,7 +473,7 @@ abstract class TableReporterBase implements ReporterInterface
         return $row;
     }
 
-    protected function buildTableCellVersionString(string $colId, ?PackageInterface $package): string
+    protected function buildTableCellVersionString(string $colId, ?DependencyInterface $package): string
     {
         // @todo String 0.
         return $package ?
@@ -309,14 +481,22 @@ abstract class TableReporterBase implements ReporterInterface
             : '';
     }
 
-    protected function buildTableCellTypeOfRelationship(string $colId, ?PackageInterface $package): string
+    protected function buildTableCellType(string $colId, ?DependencyInterface $package): string
     {
-        return $package ?
-            $package->typeOfRelationship() ?: '?'
-            : '';
+        return (string) $package?->type()?->value;
     }
 
-    protected function buildTableCellDirectDependency(string $colId, ?PackageInterface $package): string
+    protected function buildTableCellLink(string $colId, ?DependencyInterface $package): string
+    {
+        return (string) $package?->link()?->value;
+    }
+
+    protected function buildTableCellEnvironment(string $colId, ?DependencyInterface $package): string
+    {
+        return (string) $package?->environment()?->value;
+    }
+
+    protected function buildTableCellDirectDependency(string $colId, ?DependencyInterface $package): string
     {
         if (!$package) {
             return '';

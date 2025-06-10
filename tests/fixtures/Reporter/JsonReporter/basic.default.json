@@ -1,6 +1,41 @@
 {
+    "php": {
+        "name": "php",
+        "isTypeChanged": false,
+        "isLinkChanged": false,
+        "isEnvironmentChanged": false,
+        "relationshipAction": "none",
+        "isDirectDependencyChanged": false,
+        "versionAction": "upgrade",
+        "isVersionChanged": true,
+        "versionPartChanged": "minor",
+        "isVersionMajorChanged": false,
+        "isVersionMinorChanged": true,
+        "isVersionPatchChanged": true,
+        "isVersionPreReleaseChanged": true,
+        "isVersionMetadataChanged": true,
+        "left": {
+            "name": "php",
+            "type": "platform",
+            "link": "required",
+            "environment": "production",
+            "versionString": "8.3.0",
+            "isDirectDependency": true
+        },
+        "right": {
+            "name": "php",
+            "type": "platform",
+            "link": "required",
+            "environment": "production",
+            "versionString": "8.4.0",
+            "isDirectDependency": true
+        }
+    },
     "vk/rk-dk": {
         "name": "vk/rk-dk",
+        "isTypeChanged": false,
+        "isLinkChanged": false,
+        "isEnvironmentChanged": false,
         "relationshipAction": "none",
         "isDirectDependencyChanged": true,
         "versionAction": "none",
@@ -13,16 +48,25 @@
         "isVersionMetadataChanged": false,
         "left": {
             "name": "vk/rk-dk",
+            "type": "package",
+            "link": "required",
+            "environment": "production",
             "versionString": "1.2.3",
             "isDirectDependency": false
         },
         "right": {
             "name": "vk/rk-dk",
+            "type": "package",
+            "link": "required",
+            "environment": "production",
             "versionString": "1.2.3"
         }
     },
     "vk/rk-dt": {
         "name": "vk/rk-dt",
+        "isTypeChanged": false,
+        "isLinkChanged": false,
+        "isEnvironmentChanged": false,
         "relationshipAction": "none",
         "isDirectDependencyChanged": true,
         "versionAction": "none",
@@ -35,11 +79,17 @@
         "isVersionMetadataChanged": false,
         "left": {
             "name": "vk/rk-dt",
+            "type": "package",
+            "link": "required",
+            "environment": "production",
             "versionString": "2.2.3",
             "isDirectDependency": true
         },
         "right": {
             "name": "vk/rk-dt",
+            "type": "package",
+            "link": "required",
+            "environment": "production",
             "versionString": "2.2.3"
         }
     }

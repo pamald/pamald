@@ -18,7 +18,7 @@ added:
         a/b:
             name: 'a/b'
             versionString: '1.0.0'
-            typeOfRelationship: 'prod'
+            environment: 'production'
 removed:
     expected:
         a/b:
@@ -42,6 +42,9 @@ changed.version:
     expected:
         a/b:
             name: 'a/b'
+            isTypeChanged: false
+            isLinkChanged: false
+            isEnvironmentChanged: false
             relationshipAction: 'none'
             isDirectDependencyChanged: false
             versionAction: 'upgrade'
@@ -64,6 +67,9 @@ changed.moved-to-dev:
     expected:
         a/b:
             name: 'a/b'
+            isTypeChanged: false
+            isLinkChanged: false
+            isEnvironmentChanged: true
             relationshipAction: 'change'
             isDirectDependencyChanged: false
             versionAction: 'none'
@@ -78,16 +84,19 @@ changed.moved-to-dev:
         a/b:
             name: 'a/b'
             versionString: '1.2.3'
-            typeOfRelationship: 'prod'
+            environment: 'production'
     rightPackages:
         a/b:
             name: 'a/b'
             versionString: '1.2.3'
-            typeOfRelationship: 'dev'
+            environment: 'development'
 changed.indirect-direct:
     expected:
         a/b:
             name: 'a/b'
+            isTypeChanged: false
+            isLinkChanged: false
+            isEnvironmentChanged: false
             relationshipAction: 'none'
             isDirectDependencyChanged: true
             versionAction: 'none'

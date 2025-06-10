@@ -15,6 +15,8 @@ use Symfony\Component\Console\Output\StreamOutput;
  *   Configurable column content.
  *   - text vs UTF-8 chars or for boolean values.
  *   - Upgrade/Downgrade indicator arrows.
+ *
+ * @phpstan-import-type PamaldConsoleTableReporterOptions from \Pamald\Pamald\Phpstan
  */
 class ConsoleTableReporter extends TableReporterBase
 {
@@ -41,7 +43,7 @@ class ConsoleTableReporter extends TableReporterBase
     }
 
     /**
-     * @phpstan-param pamald-console-table-reporter-options $options
+     * @phpstan-param PamaldConsoleTableReporterOptions $options
      */
     public function setOptions(array $options): static
     {
@@ -104,39 +106,38 @@ class ConsoleTableReporter extends TableReporterBase
         $columns = $this->getColumns();
         $groupDefs = $this->getGroups();
         $groups = $this->groupEntries();
-        $numOfGroups = count($groupDefs);
 
         foreach ($groups as $groupId => $entries) {
             $groupDef = $groupDefs[$groupId];
-            if ($numOfGroups > 1) {
-                if (!$entries && $groupDef['showEmpty']) {
-                    $stats['isEmpty'] = false;
-                    $this->table->addRow([
-                        new TableCell(
-                            $groupDef['title'],
-                            [
-                                'colspan' => count($columns),
-                                // @todo Use different color.
-                            ],
-                        ),
-                    ]);
-                    $this->table->addRow([
-                        new TableCell(
-                            $groupDef['emptyContent'],
-                            [
-                                'colspan' => count($columns),
-                                // @todo Use different color.
-                            ],
-                        ),
-                    ]);
-
-                    continue;
-                }
-
-                $stats['isEmpty'] =  false;
+            if (!$entries && $groupDef['showEmpty']) {
+                $stats['isEmpty'] = false;
                 $this->table->addRow([
                     new TableCell(
                         $groupDef['title'],
+                        [
+                            'colspan' => count($columns),
+                            // @todo Use different color.
+                        ],
+                    ),
+                ]);
+                $this->table->addRow([
+                    new TableCell(
+                        $groupDef['emptyContent'],
+                        [
+                            'colspan' => count($columns),
+                            // @todo Use different color.
+                        ],
+                    ),
+                ]);
+
+                continue;
+            }
+
+            if ($entries && $groupDef['showHeaderForNonEmpty']) {
+                $stats['isEmpty'] =  false;
+                $this->table->addRow([
+                    new TableCell(
+                        $groupDef['title'] ?: $groupDef['id'],
                         [
                             'colspan' => count($columns),
                             // @todo Use different color.

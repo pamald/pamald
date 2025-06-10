@@ -57,6 +57,7 @@ parameters:
 				weight: int,
 				showEmpty: bool,
 				emptyContent: string,
+				showHeaderForNonEmpty: bool,
 				filter: null|bool|callable,
 				comparer: null|callable,
 			}

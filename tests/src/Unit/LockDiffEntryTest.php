@@ -5,9 +5,9 @@ declare(strict_types = 1);
 namespace Pamald\Pamald\Tests\Unit;
 
 use Pamald\Pamald\LockDiffEntry;
-use Pamald\Pamald\PackageInterface;
+use Pamald\Pamald\DependencyInterface;
 use Pamald\Pamald\RelationshipAction;
-use Pamald\Pamald\Tests\Helper\DummyPackage;
+use Pamald\Pamald\Tests\Helper\DummyDependency;
 use Pamald\Pamald\VersionAction;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -41,8 +41,8 @@ class LockDiffEntryTest extends TestBase
 
             $cases[$id] = [
                 $data['expected'],
-                isset($data['left']) ? new DummyPackage($data['left']) : null,
-                isset($data['right']) ? new DummyPackage($data['right']) : null,
+                isset($data['left']) ? new DummyDependency($data['left']) : null,
+                isset($data['right']) ? new DummyDependency($data['right']) : null,
             ];
         }
         return $cases;
@@ -55,12 +55,10 @@ class LockDiffEntryTest extends TestBase
     #[DataProvider('casesConstructor')]
     public function testConstructor(
         array $expected,
-        ?PackageInterface $left = null,
-        ?PackageInterface $right = null,
+        ?DependencyInterface $left = null,
+        ?DependencyInterface $right = null,
     ): void {
         $actual = new LockDiffEntry($left, $right);
-
-        static::assertTrue(true);
 
         foreach ($expected as $property => $expectedValue) {
             static::assertSame(

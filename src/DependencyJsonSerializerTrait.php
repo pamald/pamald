@@ -6,19 +6,24 @@ namespace Pamald\Pamald;
 
 use Sweetchuck\Utils\VersionNumber;
 
-trait PackageJsonSerializerTrait
+/**
+ * @phpstan-ignore trait.unused
+ */
+trait DependencyJsonSerializerTrait
 {
 
-    // region PackageInterface
+    // region DependencyInterface
     abstract public function name(): string;
 
-    abstract public function type(): ?string;
+    abstract public function type(): ?DependencyType;
+
+    abstract public function link(): ?DependencyLink;
+
+    abstract public function environment(): ?DependencyEnvironment;
 
     abstract public function versionString(): ?string;
 
     abstract public function version(): ?VersionNumber;
-
-    abstract public function typeOfRelationship(): ?string;
 
     abstract public function isDirectDependency(): ?bool;
 
@@ -48,8 +53,9 @@ trait PackageJsonSerializerTrait
             [
                 'name' => $this->name(),
                 'type' => $this->type(),
+                'link' => $this->link(),
+                'environment' => $this->environment(),
                 'versionString' => $this->versionString(),
-                'typeOfRelationship' => $this->typeOfRelationship(),
                 'isDirectDependency' => $this->isDirectDependency(),
                 'homepage' => $this->homepage(),
                 'vcsInfo' => $this->vcsInfo(),

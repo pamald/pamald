@@ -18,11 +18,11 @@ enum VersionAction: string
             return self::None;
         }
 
-        if (!$a && $b) {
+        if ($a === null && $b) {
             return self::Upgrade;
         }
 
-        if ($a && !$b) {
+        if ($a && $b === null) {
             return self::Downgrade;
         }
 

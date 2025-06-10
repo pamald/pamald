@@ -115,10 +115,32 @@ changed.keep.prod-to-dev:
     left:
         name: 'a/b'
         versionString: '1.2.3'
-        typeOfRelationship: 'prod'
+        environment: 'production'
         isDirectDependency: true
     right:
         name: 'a/b'
         versionString: '1.2.3'
-        typeOfRelationship: 'dev'
+        environment: 'development'
+        isDirectDependency: true
+changed.keep.required-to-optional:
+    expected:
+        name: 'a/b'
+        relationshipAction: 'change'
+        versionAction: 'none'
+        versionPartChanged: ~
+        isVersionChanged: false
+        isVersionMajorChanged: false
+        isVersionMinorChanged: false
+        isVersionPatchChanged: false
+        isVersionPreReleaseChanged: false
+        isVersionMetadataChanged: false
+    left:
+        name: 'a/b'
+        versionString: '1.2.3'
+        link: 'required'
+        isDirectDependency: true
+    right:
+        name: 'a/b'
+        versionString: '1.2.3'
+        link: 'optional'
         isDirectDependency: true

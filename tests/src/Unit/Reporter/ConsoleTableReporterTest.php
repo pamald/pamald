@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Pamald\Pamald\Tests\Unit\Reporter;
 
+use Pamald\Pamald\DependencyEnvironment;
 use Pamald\Pamald\LockDiffEntry;
 use Pamald\Pamald\LockDiffer;
 use Pamald\Pamald\Reporter\ConsoleTableReporter;
@@ -33,48 +34,6 @@ class ConsoleTableReporterTest extends ReporterTestBase
             ],
             'all-in-one' => [
                 'default' => [],
-                'group-by-right-direct' => [
-                    'groups' => [
-                        'direct-prod' => [
-                            'enabled' => true,
-                            'id' => 'direct-prod',
-                            'title' => 'Direct prod',
-                            'weight' => 0,
-                            'showEmpty' => false,
-                            'emptyContent' => '-- empty --',
-                            'filter' => (new CustomFilter())
-                                ->setOperator(function (LockDiffEntry $entry): bool {
-                                    return $entry->right?->isDirectDependency()
-                                        && $entry->right->typeOfRelationship() === 'prod';
-                                }),
-                            'comparer' => null,
-                        ],
-                        'direct-dev' => [
-                            'enabled' => true,
-                            'id' => 'direct-dev',
-                            'title' => 'Direct dev',
-                            'weight' => 1,
-                            'showEmpty' => false,
-                            'emptyContent' => '-- empty --',
-                            'filter' => (new CustomFilter())
-                                ->setOperator(function (LockDiffEntry $entry): bool {
-                                    return $entry->right?->isDirectDependency()
-                                        && $entry->right->typeOfRelationship() === 'dev';
-                                }),
-                            'comparer' => null,
-                        ],
-                        'other' => [
-                            'enabled' => true,
-                            'id' => 'other',
-                            'title' => 'Other',
-                            'weight' => 999,
-                            'showEmpty' => false,
-                            'emptyContent' => '-- empty --',
-                            'filter' => null,
-                            'comparer' => null,
-                        ],
-                    ],
-                ],
             ],
             'basic' => [
                 'default' => [],
@@ -89,8 +48,8 @@ class ConsoleTableReporterTest extends ReporterTestBase
     }
 
     /**
-     * @param null|array<string, \Pamald\Pamald\PackageInterface> $leftPackages
-     * @param null|array<string, \Pamald\Pamald\PackageInterface> $rightPackages
+     * @param null|array<string, \Pamald\Pamald\DependencyInterface> $leftPackages
+     * @param null|array<string, \Pamald\Pamald\DependencyInterface> $rightPackages
      * @param array<string, mixed> $options
      */
     #[Test]

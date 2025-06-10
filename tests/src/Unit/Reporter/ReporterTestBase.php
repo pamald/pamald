@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace Pamald\Pamald\Tests\Unit\Reporter;
 
-use Pamald\Pamald\Tests\Helper\DummyPackage;
+use Pamald\Pamald\Tests\Helper\DummyDependency;
 use Pamald\Pamald\Tests\Unit\TestBase;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
@@ -58,11 +58,11 @@ class ReporterTestBase extends TestBase
             ];
 
             foreach ($inputs[$dataSetName]['leftPackages'] ?? [] as $packageName => $packageRaw) {
-                $cases[$caseName]['leftPackages'][$packageName] = new DummyPackage($packageRaw);
+                $cases[$caseName]['leftPackages'][$packageName] = new DummyDependency($packageRaw);
             }
 
             foreach ($inputs[$dataSetName]['rightPackages'] ?? [] as $packageName => $packageRaw) {
-                $cases[$caseName]['rightPackages'][$packageName] = new DummyPackage($packageRaw);
+                $cases[$caseName]['rightPackages'][$packageName] = new DummyDependency($packageRaw);
             }
 
             $cases[$caseName] += $inputs[$dataSetName];
