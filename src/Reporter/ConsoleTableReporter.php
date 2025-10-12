@@ -21,8 +21,6 @@ use Symfony\Component\Console\Output\StreamOutput;
 class ConsoleTableReporter extends TableReporterBase
 {
 
-    use StreamOutputTrait;
-
     protected ?Table $table = null;
 
     public function getTable(): ?Table

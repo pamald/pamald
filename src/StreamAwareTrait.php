@@ -2,9 +2,9 @@
 
 declare(strict_types = 1);
 
-namespace Pamald\Pamald\Reporter;
+namespace Pamald\Pamald;
 
-trait StreamOutputTrait
+trait StreamAwareTrait
 {
 
     /**

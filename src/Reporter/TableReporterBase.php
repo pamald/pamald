@@ -9,6 +9,8 @@ use Pamald\Pamald\DependencyType;
 use Pamald\Pamald\LockDiffEntry;
 use Pamald\Pamald\DependencyInterface;
 use Pamald\Pamald\ReporterInterface;
+use Pamald\Pamald\StreamAwareInterface;
+use Pamald\Pamald\StreamAwareTrait;
 use Sweetchuck\Utils\Comparer\ArrayValueComparer;
 use Sweetchuck\Utils\Filter\EnabledFilter;
 
@@ -16,9 +18,9 @@ use Sweetchuck\Utils\Filter\EnabledFilter;
  * @phpstan-import-type PamaldConsoleTableReporterColumnDef from \Pamald\Pamald\Phpstan
  * @phpstan-import-type PamaldConsoleTableReporterGroupDef  from \Pamald\Pamald\Phpstan
  */
-abstract class TableReporterBase implements ReporterInterface
+abstract class TableReporterBase implements ReporterInterface, StreamAwareInterface
 {
-    use StreamOutputTrait;
+    use StreamAwareTrait;
 
     protected bool $quiet = true;
 

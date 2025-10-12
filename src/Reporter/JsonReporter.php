@@ -5,11 +5,13 @@ declare(strict_types = 1);
 namespace Pamald\Pamald\Reporter;
 
 use Pamald\Pamald\ReporterInterface;
+use Pamald\Pamald\StreamAwareInterface;
+use Pamald\Pamald\StreamAwareTrait;
 
-class JsonReporter implements ReporterInterface
+class JsonReporter implements ReporterInterface, StreamAwareInterface
 {
 
-    use StreamOutputTrait;
+    use StreamAwareTrait;
 
     protected int $jsonEncodeFlags = \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE;
 
